@@ -60,5 +60,5 @@ jobs:
       run: |
         az containerapp update \
           --name fastapi-app \
-          --resource-group <your-resource-group> \
+          --resource-group rudranshregistry \
           --image rudranshregistry.azurecr.io/fastapi-app:latest
