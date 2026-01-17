@@ -3,7 +3,7 @@ name: Build and Deploy FastAPI to Azure Container Apps
 on:
   push:
     branches:
-      - main   # adjust if you deploy from another branch
+      - main
 
 jobs:
   build-and-deploy:
@@ -14,11 +14,10 @@ jobs:
       contents: read
 
     steps:
-      # Step 1: Checkout code
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Step 2: Log in to Azure using OIDC
+
       - name: Log in to Azure
         uses: azure/login@v1
         with:
@@ -26,18 +25,15 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      # Step 3: Log in to ACR
       - name: Log in to Azure Container Registry
-        run: az acr login --name rudranshregistry   # replace with your ACR name
+        run: az acr login --name rudranshregistry
 
-      # Step 4: Build and push Docker image
       - name: Build and push image to ACR
         run: |
           IMAGE_TAG=v1
           docker build -t rudranshregistry.azurecr.io/fastapi-app:$IMAGE_TAG .
           docker push rudranshregistry.azurecr.io/fastapi-app:$IMAGE_TAG
 
-      # Step 5: Deploy to Azure Container Apps
       - name: Deploy to Azure Container App
         run: |
           az containerapp update \
