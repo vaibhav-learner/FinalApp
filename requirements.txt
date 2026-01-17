@@ -6,3 +6,5 @@ azure-storage-blob
 azure-identity
 jinja2
 python-dotenv
+agent-framework-azure-ai
+openai
