@@ -42,5 +42,5 @@ jobs:
         run: |
           az containerapp update \
             --name fastapi-app \                # replace with your Container App name
-            --resource-group my-resource-group \ # replace with your resource group
-            --image rudranshregistry.azurecr.io/fastapi-app:${{ github.sha }}
+            --resource-group rudranshregistry \ # replace with your resource group
+            --image rudranshregistry.azurecr.io/fastapi-app:$IMAGE_TAG
