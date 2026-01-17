@@ -142,13 +142,17 @@ class CookingAgent:
         """Initialize the cooking agent with GitHub model."""
         self.github_token = github_token or os.getenv("GITHUB_TOKEN", "")
         if not self.github_token:
-            raise ValueError("GITHUB_TOKEN environment variable not set")
+            raise ValueError("GITHUB_TOKEN environment variable not set. Please set GITHUB_TOKEN env var.")
         
         self.agent = None
         self.thread = None
+        self._initialized = False
     
     async def initialize(self):
         """Initialize the agent asynchronously."""
+        if self._initialized:
+            return
+            
         try:
             # Create OpenAI client pointing to GitHub models
             openai_client = AsyncOpenAI(
@@ -178,6 +182,7 @@ class CookingAgent:
             
             # Create a thread for conversation history
             self.thread = self.agent.get_new_thread()
+            self._initialized = True
             
         except Exception as e:
             raise RuntimeError(f"Failed to initialize cooking agent: {str(e)}")

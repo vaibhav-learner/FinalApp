@@ -1,4 +1,5 @@
 import os
+import asyncio
 from fastapi import FastAPI, UploadFile, Request, File
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import JSONResponse
@@ -57,16 +58,25 @@ async def cooking_chat(request: Request):
         
         logging.info(f"Cooking agent received message: {user_message}")
         
-        # Get the cooking agent
-        agent = await get_cooking_agent()
+        try:
+            # Get the cooking agent
+            agent = await get_cooking_agent()
+            
+            # Process the message with timeout
+            import asyncio
+            response = await asyncio.wait_for(agent.chat(user_message), timeout=30.0)
+            
+            return JSONResponse({
+                "response": response,
+                "status": "success"
+            })
+        except asyncio.TimeoutError:
+            logging.error("Cooking agent timeout - GitHub API may be slow")
+            return JSONResponse({
+                "error": "Agent response timed out. Please try again. Make sure GITHUB_TOKEN is set correctly.",
+                "status": "error"
+            }, status_code=504)
         
-        # Process the message
-        response = await agent.chat(user_message)
-        
-        return JSONResponse({
-            "response": response,
-            "status": "success"
-        })
     except Exception as e:
         logging.error(f"Error in cooking chat: {str(e)}")
         return JSONResponse({
