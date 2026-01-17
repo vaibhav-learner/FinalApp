@@ -37,6 +37,6 @@ jobs:
       - name: Deploy to Azure Container App
         run: |
           az containerapp update \
-            --name fastapi-app \                # replace with your Container App name
-            --resource-group rudranshregistry \ # replace with your resource group
+            --name fastapi-app \
+            --resource-group rudranshregistry \
             --image rudranshregistry.azurecr.io/fastapi-app:$IMAGE_TAG
